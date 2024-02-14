@@ -22,6 +22,7 @@ function LoginForm (props) {
     }
 
     async function submitLogin (event) {
+        console.log('ciao');
         event.preventDefault();
 
         if (!validateEmail(email)) {
@@ -38,6 +39,8 @@ function LoginForm (props) {
         });
 
         const data = await resp.json();
+
+        console.log(data);
 
         if (data.username) {
             props.loadUser(data, () => {
