@@ -71,7 +71,11 @@ function App() {
             <RegisterForm loadUser={loadUser} API_URL={API_URL}/>
           }/>
           <Route path='/' element= {
-            <Dashboard username={username} email={email}/>
+            !sessionChecked ?
+              <p>Loading</p> :
+              isAuthenticated ?
+                <Dashboard username={username} email={email}/> :
+                <Navigate replace to={'/auth/login'}/>
           }/>
         </Routes>
       </BrowserRouter>
