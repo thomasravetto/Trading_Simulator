@@ -96,8 +96,8 @@ function RegisterForm (props) {
                 <button onClick={submitRegister}>Register</button>
                 <p className='alternatives_p'>or Register using</p>
                 <div className="social">
-                    <a href='https://google.com'><img className="go" src={GoogleLogo} alt='google logo'></img></a>
-                    <a href='https://github.com'><img className="gh" src={GithubLogo} alt='github logo'></img></a>
+                    <a href='/v1/auth/google'><img className="go" src={GoogleLogo} alt='google logo'></img></a>
+                    <a href='/v1/auth/github'><img className="gh" src={GithubLogo} alt='github logo'></img></a>
                 </div>
 
                 <p className="redirect_auth">Already have an account? <a href="/auth/login">Log In</a></p>

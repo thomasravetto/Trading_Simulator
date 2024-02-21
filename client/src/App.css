@@ -1,6 +1,8 @@
 :root {
-  --purple: #7F27FF;
+  --blue: #211951;
+  --purple: #6969d3;
   --green: #96E9C6;
+  --neon_green: #15F5BA;
 }
 
 * {
@@ -13,7 +15,7 @@
 }
 
 html, body {
-  margin: 0; height: 100%; overflow: hidden
+  margin: 0; height: 100%;
 }
 
 /* Authentication */
@@ -103,6 +105,7 @@ html, body {
   padding: 10px;
   border-radius: 10px;
   border: none;
+  transition: 100ms;
 }
 
 .login_form button:hover, .registration_form button:hover {
@@ -111,7 +114,6 @@ html, body {
 
 .login_form button:active, .registration_form button:active {
   transform: scale(0.9);
-  transition: 100ms;
 }
 
 .input_container {
@@ -147,11 +149,11 @@ html, body {
   margin: 10px;
   margin-top: 35px;
   cursor: pointer;
+  transition: 100ms;
 }
 
 .go:active, .gh:active {
   transform: scale(0.9);
-  transition: 100ms;
 }
 
 .gh {
@@ -180,3 +182,234 @@ html, body {
 
 
 /* Authentication */
+
+/* NavBar */
+
+.navbar_logo {
+  width: 70px;
+  height: auto;
+  padding: 18px;
+  display: inline;
+}
+
+.navbar_container {
+  background-color: var(--blue);
+  height: 300px;
+}
+
+.navbar_link {
+  color: white;
+  font-weight: bold;
+  display: inline;
+  padding: 0 60px;
+  cursor: pointer;
+  font-size: large;
+}
+
+.navbar_link:hover {
+  color: var(--neon_green);
+}
+
+.navbar_links_container {
+  height: 20px;
+  text-align: right;
+  position: relative;
+  bottom: 68px;
+}
+
+
+/* NavBar */
+
+/* Dashboard */
+
+.dashboard_element {
+  background-color: rgb(250, 250, 250);
+  height: 100%;
+}
+
+.dashboard_container {
+  background-color: white;
+  box-shadow: 0px 50px 60px rgba(158, 158, 158, 0.15);
+  height: auto;
+  min-height: 70vh;
+  width: 70vw;
+  border-radius: 50px;
+  transform: translate(-50%);
+  position: relative;
+  left: 50%;
+  bottom: 150px;
+  padding-bottom: 30px;
+}
+
+.dashboard_user_container {
+  padding: 50px;
+}
+
+.user_image {
+  border-radius: 50%;
+  box-shadow: 0px 0px 20px rgb(209, 209, 209, 0.5);
+  width: 80px;
+}
+
+.user_username {
+  font-size:x-large;
+  font-weight: bold;
+  display: inline;
+  position: relative;
+  bottom: 25px;
+  left: 25px;
+}
+
+.watchlist_transactions_container {
+  width: 80%;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+  display: flex;
+}
+
+.watchlist_container {
+  flex: 1;
+  margin-right: 40px;
+}
+
+.portfolio_container {
+  flex: 2;
+}
+
+.watchlist_title {
+  font-size: xx-large;
+  padding: 10px;
+
+}
+.portfolio_title {
+  font-size: xx-large;
+  padding: 10px;
+}
+
+/* Dashboard */
+
+/* WatchList */
+
+.watchlist_skeleton, .watchlist_item {
+  box-shadow: 0 15px 30px rgba(158, 158, 158, 0.4);
+  aspect-ratio: 5/4;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 100ms;
+  margin: 40px 0;
+}
+
+.watchlist_skeleton {
+  background-color: rgb(105, 105, 211, 0.6);
+}
+
+.watchlist_item:nth-child(3n + 2) {
+  color: white;
+  background-color: var(--blue);
+}
+
+.watchlist_item:nth-child(3n + 0) {
+  color: white;
+  background-color: var(--purple);
+}
+
+.watchlist_item:nth-child(3n + 1) {
+  background-color: white;
+  color: black;
+}
+
+.watchlist_skeleton:active, .watchlist_item:active {
+  transform: scale(0.95);
+}
+
+.watchlist_skeleton_button {
+  background-color: rgb(255, 255, 255, 0.5);
+  font-size: xx-large;
+  border-radius: 50%;
+  height: 30%;
+  aspect-ratio: 1/1;
+  border: none;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.watchlist_prices_graph_container {
+  display: flex;
+}
+
+.watchlist_item_title {
+  flex: 1;
+  padding: 1.5vw;
+}
+
+.watchlist_item_prices {
+  padding-left: 30px;
+}
+
+.percentage {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+.positive {
+  background-color: rgb(108,	193, 151);
+}
+
+.negative {
+  background-color: red;
+}
+
+
+.watchlist_graph_container {
+  flex: 1; /* Allow the container to grow to fill available space */
+  padding: 30px; /* Add padding to create space around the chart */
+  position: relative;
+  top: -10px; /* Adjust the positioning as needed */
+}
+
+.watchlist_graph {
+  width: 100%; /* Ensure the chart fills its container */
+  height: 100%; /* Ensure the chart fills its container */
+}
+
+
+/* WatchList */
+
+/* Portfolio */
+
+.portfolio_skeleton {
+  background-color: rgb(150, 233, 198, 0.6);
+  box-shadow: 0 15px 30px rgba(158, 158, 158, 0.2);
+  aspect-ratio: 4/1;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 100ms;
+  margin: 40px 0;
+}
+
+.portfolio_skeleton:active {
+  transform: scale(0.95);
+}
+
+.portfolio_skeleton_button {
+  background-color: rgba(255, 255, 255, 0.5);
+  font-size: xx-large;
+  border-radius: 50%;
+  height: 50%;
+  aspect-ratio: 1/1;
+  border: none;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+
+/* Portfolio */

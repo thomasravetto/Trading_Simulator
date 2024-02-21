@@ -57,8 +57,17 @@ function App() {
       setSessionChecked(true);
     }
 
-    handleSessionChecker();
+    // handleSessionChecker();
+    setDummySession();
   })
+
+  function setDummySession () {
+    setAuthenticated(true);
+    setId(100);
+    setUsername('Jesus');
+    setEmail('jesus@gmail.com');
+    setSessionChecked(true);
+  }
 
   return (
     <div className="App">
@@ -74,7 +83,7 @@ function App() {
             !sessionChecked ?
               <p>Loading</p> :
               isAuthenticated ?
-                <Dashboard username={username} email={email}/> :
+                <Dashboard username={username} email={email} userId={userId}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
         </Routes>

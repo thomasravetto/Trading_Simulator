@@ -87,8 +87,8 @@ function LoginForm (props) {
                 <button onClick={submitLogin}>Log In</button>
                 <p className='alternatives_p'>or Sign Up using</p>
                 <div className="social">
-                    <a href='https://google.com'><img className="go" src={GoogleLogo} alt='google logo'></img></a>
-                    <a href='/v1/oauth/auth/github'><img className="gh" src={GithubLogo} alt='github logo'></img></a>
+                    <a href='/v1/auth/google'><img className="go" src={GoogleLogo} alt='google logo'></img></a>
+                    <a href='/v1/auth/github'><img className="gh" src={GithubLogo} alt='github logo'></img></a>
                 </div>
 
                 <p className="redirect_auth">Don't have an account? <a href="/auth/register">Register</a></p>
