@@ -57,8 +57,8 @@ function App() {
       setSessionChecked(true);
     }
 
-    // handleSessionChecker();
-    setDummySession();
+    handleSessionChecker();
+    // setDummySession();
   })
 
   function setDummySession () {

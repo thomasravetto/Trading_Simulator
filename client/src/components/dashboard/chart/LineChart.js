@@ -2,21 +2,14 @@ import { useState } from 'react';
 import Chart from  'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 
-// let chart = document.getElementById('chart').getContext('2d'),
-//     gradient = chart.createLinearGradient(0, 0, 0, 450);
-
-// gradient.addColorStop(0, 'rgb(255, 0, 0, 0.5');
-// gradient.addColorStop(0, 'rgb(255, 0, 0, 0.25');
-// gradient.addColorStop(0, 'rgb(255, 0, 0, 0.0');
-
 function LineChart ({ asset_prices }) {
 
     const [charData, setCharData] = useState({
-        labels: asset_prices ? asset_prices.map((data) => data.timestamp) : [],
+        labels: asset_prices,
         datasets: [
             {
                 label: '',
-                data: asset_prices ? asset_prices.map((data) => data.price) : [],
+                data: asset_prices,
                 backgroundColor: function(context) {
                     const chart = context.chart;
                     const ctx = chart.ctx;
