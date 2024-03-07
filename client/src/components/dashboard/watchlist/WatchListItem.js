@@ -5,7 +5,6 @@ function WatchListItem (props) {
     const asset_prices = props.asset.prices.reverse();
 
     function calculate_percentage (first_val, last_val) {
-        console.log(first_val, last_val)
         return String(((last_val - first_val) / first_val) * 100).slice(0, 4);
     }
 
@@ -21,7 +20,7 @@ function WatchListItem (props) {
                 <div className='watchlist_item_prices'>
                     <h2>{asset_prices[asset_prices.length - 1].slice(0, -2)}$</h2>
                     <div className="percentage_container">
-                        {percentage_from_yesterday >= 0 ?
+                        {percentage_from_yesterday > 0 ?
                         <p className='percentage positive'>+{percentage_from_yesterday}%</p> :
                         <p className='percentage negative'>{percentage_from_yesterday}%</p>}
                     </div>

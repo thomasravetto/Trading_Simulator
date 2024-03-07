@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 
 function LineChart ({ asset_prices }) {
 
-    const [charData, setCharData] = useState({
+    const charData = {
         labels: asset_prices,
         datasets: [
             {
@@ -24,7 +24,7 @@ function LineChart ({ asset_prices }) {
                 fill: true,
             }
         ]
-    });
+    };
 
     const options = {
         scales: {

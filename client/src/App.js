@@ -5,6 +5,7 @@ import './App.css';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/dashboard/Dashboard';
+import MarketItem from './components/market/MarketItem';
 
 const SERVER_URL = window.location.origin;
 
@@ -57,8 +58,8 @@ function App() {
       setSessionChecked(true);
     }
 
-    handleSessionChecker();
-    // setDummySession();
+    // handleSessionChecker();
+    setDummySession();
   })
 
   function setDummySession () {
@@ -84,6 +85,13 @@ function App() {
               <p>Loading</p> :
               isAuthenticated ?
                 <Dashboard username={username} email={email} userId={userId}/> :
+                <Navigate replace to={'/auth/login'}/>
+          }/>
+          <Route path='/market/:symbol' element= {
+            !sessionChecked ?
+              <p>Loading</p> :
+              isAuthenticated ?
+                <MarketItem username={username} email={email} userId={userId}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
         </Routes>
