@@ -15,7 +15,10 @@ function WatchListItem (props) {
 
     return (
         <div className='watchlist_item'>
-            <h1 className='watchlist_item_title'>{asset_info.symbol}</h1>
+            <div className='watchlist_item_title'>
+                <h1 className='watchlist_item_symbol'>{asset_info.symbol}</h1>
+                <p className='watchlist_item_name'>{asset_info.name}</p>
+            </div>
             <div className='watchlist_prices_graph_container'>
                 <div className='watchlist_item_prices'>
                     <h2>{asset_prices[asset_prices.length - 1].slice(0, -2)}$</h2>

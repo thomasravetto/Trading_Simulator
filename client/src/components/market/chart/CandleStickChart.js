@@ -22,9 +22,13 @@ const CandleStickChart = forwardRef((props, ref) => {
             },
         },
         tooltip: {
+            enabled: true,
+            style: {
+                fontSize: '2px',
+            },
             x: {
                 show: true,
-                format: 'dd MM',
+                format: 'dd MMM',
             }
         },
         xaxis: {
@@ -65,7 +69,7 @@ const CandleStickChart = forwardRef((props, ref) => {
     }, [props.prices]);
 
     return (
-        <div>
+        <div className='candlestick_chart'>
             <Chart
             type='candlestick'
             height={500}

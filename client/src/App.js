@@ -58,15 +58,15 @@ function App() {
       setSessionChecked(true);
     }
 
-    // handleSessionChecker();
-    setDummySession();
+    handleSessionChecker();
+    // setDummySession();
   })
 
   function setDummySession () {
     setAuthenticated(true);
-    setId(100);
-    setUsername('Jesus');
-    setEmail('jesus@gmail.com');
+    setId(6);
+    setUsername('Thomas');
+    setEmail('thomas@gmail.com');
     setSessionChecked(true);
   }
 
@@ -87,7 +87,7 @@ function App() {
                 <Dashboard username={username} email={email} userId={userId}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
-          <Route path='/market/:symbol' element= {
+          <Route path='/market' element= {
             !sessionChecked ?
               <p>Loading</p> :
               isAuthenticated ?

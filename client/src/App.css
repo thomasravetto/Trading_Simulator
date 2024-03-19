@@ -5,6 +5,10 @@
   --neon_green: #15F5BA;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -192,38 +196,110 @@ html, body {
   display: inline;
 }
 
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100px;
+}
+
 .navbar_container {
   background-color: var(--blue);
-  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar_empty_container {
+  height: 200px;
 }
 
 .navbar_link {
   color: white;
   font-weight: bold;
   display: inline;
-  padding: 0 60px;
   cursor: pointer;
   font-size: large;
   transition: 100ms;
+  line-height: 1.5em;
+  margin: 0px 60px;
 }
 
 .navbar_link:hover {
-  font-size: x-large;
+  font-size: 130%;
+  line-height: 1.15385em;
+  margin: 52px;
+}
+
+.navbar_link:active {
+  font-size: 120%;
+  line-height: 1.25em;
 }
 
 .navbar_links_container {
-  height: 20px;
-  width: 50%;
-  text-align: right;
-  position: relative;
-  left: 45%;
-  bottom: 68px;
+  display: flex;
 }
 
 .navbar_links_container a {
   text-decoration: none;
 }
 
+.navbar_searchbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: start;
+  max-width: 450px;
+  position: relative;
+  top: 37.5px;
+}
+
+.navbar_market_input {
+  border: none;
+  border-radius: 5px;
+  width: 300px;
+  height: 25px;
+}
+
+.navbar_asset_list {
+  max-height: 300px;
+  background-color: rgb(237, 237, 237);
+  z-index: 1;
+  border-radius: 10px;
+  overflow: scroll;
+  max-width: 100%;
+}
+
+.navbar_list_element h3, .navbar_list_element p {
+  display: inline;
+}
+
+.navbar_list_element {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 20px;
+  cursor: pointer;
+}
+
+.navbar_list_element:hover {
+  background-color: rgb(211, 211, 211);
+}
+
+.navbar_list_element:active {
+  background-color: rgb(181, 181, 181);
+}
+
+.navbar_list_title {
+  flex: 1;
+  margin: 0px 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a:has(.navbar_list_element) {
+  text-decoration: none;
+  color: black;
+}
 
 /* NavBar */
 
@@ -231,7 +307,7 @@ html, body {
 
 .dashboard_element {
   background-color: rgb(250, 250, 250);
-  height: 100%;
+
 }
 
 .dashboard_container {
@@ -370,8 +446,21 @@ html, body {
 }
 
 .watchlist_item_title {
-  flex: 1;
   padding: 1.5vw;
+  display: flex;
+  align-items: center;
+}
+
+.watchlist_item_symbol {
+  white-space: nowrap;
+}
+
+.watchlist_item_name {
+  margin-left: 10px;
+  font-size: 1.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .watchlist_item_prices {
@@ -477,6 +566,58 @@ html, body {
 .market_item_title {
   padding: 30px;
   font-size: xx-large;
+  display: flex;
+  justify-content: space-between;
 }
+
+.market_item_timestamp {
+  margin: 20px;
+  border-radius: 5px;
+}
+
+.market_item_timestamp button {
+  padding: 5px;
+  border: none;
+  transition: 100ms;
+}
+
+.market_item_timestamp button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.market_item_timestamp button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.market_item_timestamp button:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.market_item_timestamp button:active {
+  background-color: rgb(199, 199, 199);
+}
+
+.market_item_add_to_watchlist, .market_item_remove_from_watchlist {
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  height: 40px;
+  padding: 10px;
+}
+
+.market_item_add_to_watchlist:hover, .market_item_remove_from_watchlist:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.market_item_add_to_watchlist:active, .market_item_remove_from_watchlist:active {
+  background-color: rgb(199, 199, 199);
+}
+
+.timeframe_button_active {
+  background-color: rgb(199, 199, 199);
+}
+
 
 /* Market */
