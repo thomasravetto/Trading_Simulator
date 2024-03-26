@@ -212,7 +212,7 @@ function Dashboard (props) {
 
     return (
         <div className='dashboard_element'>
-            <NavBar ref={inputRef} userId={userId}/>
+            <NavBar ref={inputRef} userId={userId} />
             <div className='dashboard_container'>
                 <div className='dashboard_user_container'>
                     <img className='user_image'

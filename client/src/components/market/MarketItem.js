@@ -128,6 +128,7 @@ function MarketItem (props) {
     //   }, [scrollTop, chartRef]);
 
     async function fetchData(asset_symbol, timeframe) {
+        console.log(asset_symbol)
         setTimeframe(timeframe);
         const data = await fetchMarketItemData(asset_symbol, timeframe);
         if (data) {
@@ -139,9 +140,13 @@ function MarketItem (props) {
     }
 
     useEffect(() => {
-        fetchData(asset_symbol, timeframe);
-        checkIfItemInWatchlist(user_id, asset_symbol, asset_name);
-    }, [symbol]);
+        setAssetSymbol(symbol);
+        setAssetName(name);
+        checkIfItemInWatchlist(user_id, symbol, name);
+        if (symbol && timeframe) {
+            fetchData(symbol, timeframe);
+        }
+    }, [symbol, name]);
 
     return (
         <div className="market_element">
