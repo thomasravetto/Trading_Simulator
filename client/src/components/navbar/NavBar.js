@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 const NavBar = forwardRef((props, ref) => {
     const inputRef = useRef(null);
+    const assetListRef = useRef(null);
 
     const [assetList, setAssetList] = useState([
     ]);
@@ -41,12 +42,10 @@ const NavBar = forwardRef((props, ref) => {
     }
 
     const clearInput = () => {
-        setTimeout(() => {
-            if (inputRef.current) {
-                inputRef.current.value = '';
-            }
-            searchSymbol();
-        }, 100);
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+        searchSymbol();
     };
 
     const focus = () => {
@@ -57,7 +56,20 @@ const NavBar = forwardRef((props, ref) => {
         if (ref) {
             ref.current = inputRef.current;
         }
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            // Remove event listener when component unmounts
+            document.removeEventListener('click', handleClickOutside);
+        };
     }, [ref]);
+
+    const handleClickOutside = (event) => {
+        if (inputRef.current && !inputRef.current.contains(event.target) && assetListRef.current && !assetListRef.current.contains(event.target)) {
+            clearInput();
+        }
+    };
 
     return (
         <div className='navbar_container'>
@@ -67,10 +79,9 @@ const NavBar = forwardRef((props, ref) => {
                     <input ref={inputRef}
                         className='navbar_market_input'
                         type='text'
-                        onChange={searchSymbolOnStopTyping}
-                        onBlur={clearInput}>
+                        onChange={searchSymbolOnStopTyping}>
                     </input>
-                    <div className='navbar_asset_list'>
+                    <div ref={assetListRef} className='navbar_asset_list'>
                         {
                             assetList&& assetList.length > 0 ? assetList.map((asset) => {
                                 const symbol = asset['1. symbol'];

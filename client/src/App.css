@@ -343,6 +343,14 @@ a:has(.navbar_list_element) {
   left: 25px;
 }
 
+.user_balance {
+  bottom: 25px;
+  display: inline;
+  font-size: x-large;
+  left: 45px;
+  position: relative;
+}
+
 .watchlist_transactions_container {
   width: 80%;
   position: relative;
@@ -617,6 +625,15 @@ a:has(.navbar_list_element) {
 
 .timeframe_button_active {
   background-color: rgb(199, 199, 199);
+}
+
+.market_item_no_asset_title {
+  position: relative;
+  top: 50px;
+}
+
+.market_item_no_asset_title_container {
+  text-align: center;
 }
 
 

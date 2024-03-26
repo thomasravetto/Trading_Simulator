@@ -127,6 +127,7 @@ function Dashboard (props) {
     const [username, setUsername] = useState(props.username);
     const [email, setEmail] = useState(props.email);
     const [userId, setUserId] = useState(props.userId);
+    const [balance, setBalance] = useState(props.balance);
     const [watchlist, setWatchlist] = useState([]); //set back to empty
     const [userImage, setUserImage] = useState(null);
 
@@ -219,6 +220,7 @@ function Dashboard (props) {
                     src= {userImage}
                     alt="gray user profile icon"/>
                     <p className='user_username'>{props.username[0].toUpperCase() + props.username.substring(1)}</p>
+                    <p className="user_balance"> {balance}$</p>
                 </div>
                 <div className='watchlist_transactions_container'>
                     <div className='watchlist_container'>

@@ -9,7 +9,7 @@ import MarketItem from './components/market/MarketItem';
 
 const SERVER_URL = window.location.origin;
 
-const API_URL = window.location.origin + '/v1';
+const API_URL = SERVER_URL + '/v1';
 
 function App() {
 
@@ -17,12 +17,14 @@ function App() {
   const [userId, setId] = useState();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [balance, setBalance] = useState(null);
   const [sessionChecked, setSessionChecked] = useState(false);
 
   function loadUser (user, callback) {
     setId(user.id);
     setUsername(user.username)
     setEmail(user.email)
+    setBalance(user.balance);
     setAuthenticated(true);
     if (callback) {
       callback();
@@ -54,6 +56,7 @@ function App() {
         setId(sessionStatus.id);
         setUsername(sessionStatus.username);
         setEmail(sessionStatus.email);
+        setBalance(sessionStatus.balance);
       }
       setSessionChecked(true);
     }
@@ -84,7 +87,7 @@ function App() {
             !sessionChecked ?
               <p>Loading</p> :
               isAuthenticated ?
-                <Dashboard username={username} email={email} userId={userId}/> :
+                <Dashboard username={username} email={email} userId={userId} balance={balance}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
           <Route path='/market' element= {

@@ -128,7 +128,6 @@ function MarketItem (props) {
     //   }, [scrollTop, chartRef]);
 
     async function fetchData(asset_symbol, timeframe) {
-        console.log(asset_symbol)
         setTimeframe(timeframe);
         const data = await fetchMarketItemData(asset_symbol, timeframe);
         if (data) {
@@ -177,7 +176,11 @@ function MarketItem (props) {
                     </div>
                     <CandleStickChart ref={chartRef} prices={asset[0].prices.reverse()} />
                 </div>
-            ) : <div></div>}
+            ) : asset_symbol ?
+                    <div></div> :
+                    <div className="market_item_no_asset_title_container">
+                        <h1 className="market_item_no_asset_title">Use the Searchbar to find the asset you want to analyse.</h1>
+                    </div>}
         </div>
     </div>
     )
