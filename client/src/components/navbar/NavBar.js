@@ -1,8 +1,10 @@
-import { useRef, forwardRef, useState } from 'react';
+import { useRef, forwardRef, useState, useEffect } from 'react';
 import Logo from '../../logo.png';
 import { Link } from 'react-router-dom';
 
 const NavBar = forwardRef((props, ref) => {
+    const inputRef = useRef(null);
+
     const [assetList, setAssetList] = useState([
     ]);
 
@@ -21,6 +23,10 @@ const NavBar = forwardRef((props, ref) => {
     }
 
     async function searchSymbol (symbolInput) {
+        if (!symbolInput || symbolInput === '') {
+            setAssetList([])
+        }
+
         const resp = await fetch('/v1/market/symbol_search', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -34,12 +40,36 @@ const NavBar = forwardRef((props, ref) => {
         setAssetList(bestMatches);
     }
 
+    const clearInput = () => {
+        setTimeout(() => {
+            if (inputRef.current) {
+                inputRef.current.value = '';
+            }
+            searchSymbol();
+        }, 100);
+    };
+
+    const focus = () => {
+        inputRef.current.focus();
+    }
+
+    useEffect(() => {
+        if (ref) {
+            ref.current = inputRef.current;
+        }
+    }, [ref]);
+
     return (
         <div className='navbar_container'>
             <div className='navbar'>
                 <a href='/'><img className='navbar_logo' src={Logo} alt='app logo'/></a>
                 <div className='navbar_searchbar'>
-                    <input ref={ref} className='navbar_market_input' type='text' onChange={searchSymbolOnStopTyping}></input>
+                    <input ref={inputRef}
+                        className='navbar_market_input'
+                        type='text'
+                        onChange={searchSymbolOnStopTyping}
+                        onBlur={clearInput}>
+                    </input>
                     <div className='navbar_asset_list'>
                         {
                             assetList&& assetList.length > 0 ? assetList.map((asset) => {
@@ -47,7 +77,7 @@ const NavBar = forwardRef((props, ref) => {
                                 const name = asset['2. name'];
                                 const currency = asset['8. currency'];
 
-                                return (<Link to={'/market'} state={{ symbol: symbol, name: name, userId: userId }}>
+                                return (<Link to={'/market'} state={{ symbol: symbol, name: name, userId: userId }} onClick={clearInput}>
                                     <span className='navbar_list_element'>
                                         <h3 className='navbar_list_symbol'>{symbol}</h3>
                                         <p className='navbar_list_title'>{name}</p>
@@ -61,7 +91,7 @@ const NavBar = forwardRef((props, ref) => {
                 </div>
                 <div className='navbar_links_container'>
                     <a href='/'><p className='navbar_link'>Dashboard</p></a>
-                    <a href='/market'><p className='navbar_link'>Market</p></a>
+                    <a onClick={focus}><p className='navbar_link'>Market</p></a>
                     <a href='/about'><p className='navbar_link'>About</p></a>
                     <a href='/'><p className='navbar_link'>Profile</p></a>
                 </div>
