@@ -3,6 +3,8 @@ import Logo from '../../logo.png';
 import { Link } from 'react-router-dom';
 
 const NavBar = forwardRef((props, ref) => {
+    const API_URL = props.API_URL;
+
     const inputRef = useRef(null);
     const assetListRef = useRef(null);
 
@@ -28,7 +30,7 @@ const NavBar = forwardRef((props, ref) => {
             setAssetList([])
         }
 
-        const resp = await fetch('/v1/market/symbol_search', {
+        const resp = await fetch(API_URL + '/market/symbol_search', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

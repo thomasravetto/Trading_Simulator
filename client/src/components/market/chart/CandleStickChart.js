@@ -29,10 +29,13 @@ const CandleStickChart = forwardRef((props, ref) => {
             x: {
                 show: true,
                 format: 'dd MMM',
-            }
+            },
         },
         xaxis: {
             type: "category",
+            labels: {
+                show: false
+            }
         },
         yaxis: {
             tooltip: {
@@ -46,7 +49,7 @@ const CandleStickChart = forwardRef((props, ref) => {
         function processData () {
             const seriesData = [
                 {
-                    data: props.prices.map((price) => {
+                    data: props.prices.reverse().map((price) => {
                 return {
                     x: String(price[0]),
                     y: [

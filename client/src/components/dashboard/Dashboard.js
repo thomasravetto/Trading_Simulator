@@ -5,6 +5,7 @@ import PortFolioSkeleton from "./portfolio/PortFolioSkeleton";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { useRef, forwardRef } from 'react';
+import PortfolioItem from "./portfolio/PortFolioItem";
 
 const dummy = [
      [
@@ -124,11 +125,14 @@ const dummy = [
 function Dashboard (props) {
     const inputRef = useRef(null);
 
+    const API_URL = props.API_URL;
+
     const [username, setUsername] = useState(props.username);
     const [email, setEmail] = useState(props.email);
     const [userId, setUserId] = useState(props.userId);
     const [balance, setBalance] = useState(props.balance);
     const [watchlist, setWatchlist] = useState([]); //set back to empty
+    const [portfolio, setPortfolio] = useState([]);
     const [userImage, setUserImage] = useState(null);
 
     const focus = () => {
@@ -146,36 +150,42 @@ function Dashboard (props) {
       };
     loadImage(userId);
 
+    // formats the data received from the api to a simpler object
     function formatAssetData (data) {
         if (data && data.metadata && data.prices) {
-            const assetInfo = [];
-            const assetPrices = [];
-
-            data.prices.map((price) => {
-                return assetPrices.push(price[1]['4. close']);
-            });
-
-            const name = data.metadata["1. Name"];
-            const symbol = data.metadata['2. Symbol'];
-            const lastRefreshed = data.metadata['3. Last Refreshed'];
-
-            assetInfo.push({
+            const assetInfo = {
                 "metadata": {
-                    "name": name,
-                    "symbol": symbol,
-                    "last_refreshed": lastRefreshed
+                    "name": data.metadata["1. Name"],
+                    "symbol": data.metadata['2. Symbol'],
+                    "last_refreshed": data.metadata['3. Last Refreshed']
                 },
-                "prices" : assetPrices
-            });
+                "prices" : data.prices.map(price => price[1]['4. close'])
+            };
 
             return assetInfo;
         } else {
-            return false;
+            return null;
         }
     }
 
+    async function fetchUserPortfolio (userId) {
+        const resp = await fetch(API_URL + '/portfolio/get_user_portfolio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'user_id': userId
+            })
+        });
+
+        const data = await resp.json();
+
+        return data;
+    }
+
     async function fetchWatchlistData (userId) {
-        const resp = await fetch('/v1/watchlist/load_assets_prices', {
+        const resp = await fetch(API_URL + '/watchlist/load_assets_prices', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -201,11 +211,13 @@ function Dashboard (props) {
 
     useEffect(() => {
         async function fetchData () {
-            const data = await fetchWatchlistData(userId);
-            if (data) {
-                setWatchlist(data);
+            const watchlistData = await fetchWatchlistData(userId);
+            const portfolioData = await fetchUserPortfolio(userId);
+            if (watchlistData && portfolioData) {
+                setWatchlist(watchlistData);
+                setPortfolio(portfolioData);
             } else {
-                throw new Error(data);
+                throw new Error('Error retrieving data');
             }
         }
         fetchData();
@@ -213,7 +225,7 @@ function Dashboard (props) {
 
     return (
         <div className='dashboard_element'>
-            <NavBar ref={inputRef} userId={userId} />
+            <NavBar ref={inputRef} userId={userId} API_URL={API_URL}/>
             <div className='dashboard_container'>
                 <div className='dashboard_user_container'>
                     <img className='user_image'
@@ -227,7 +239,7 @@ function Dashboard (props) {
                         <h3 className='watchlist_title'>WatchList</h3>
                         {
                             watchlist && watchlist.length > 0 ? watchlist.map((asset) => {
-                                return <Link to={{pathname: '/market'}} state={{ symbol: asset[0].metadata.symbol, name: asset[0].metadata.name, userId: userId }}><WatchListItem asset={asset[0]}/></Link>
+                                return <Link key={asset.metadata.name} to={{pathname: '/market'}} state={{ symbol: asset.metadata.symbol, name: asset.metadata.name, userId: userId }}><WatchListItem asset={asset}/></Link>
                             }) :
                             <div></div>
                         }
@@ -237,6 +249,12 @@ function Dashboard (props) {
                     </div>
                     <div className='portfolio_container'>
                         <h3 className='portfolio_title'>Portfolio</h3>
+                        {
+                            watchlist && watchlist.length > 0 ? portfolio.map((asset) => {
+                                return <Link key={asset.asset_name} to={{pathname: '/market'}} state={{ symbol: asset.asset_symbol, name: asset.asset_name, userId: userId }}><PortfolioItem asset={asset} API_URL={API_URL}/></Link>
+                            }) :
+                            <div></div>
+                        }
                         <div onClick={focus}>
                             <PortFolioSkeleton/>
                         </div>

@@ -1,12 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import NavBar from "../navbar/NavBar";
 import CandleStickChart from "./chart/CandleStickChart";
+import OperationWindow from "./OperationWindow";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 function MarketItem (props) {
     const location = useLocation();
     const { symbol, name, userId } = location.state || {};
+
+    const API_URL = props.API_URL;
 
     const [user_id, setUserId] = useState(userId);
     const [asset_symbol, setAssetSymbol] = useState(symbol);
@@ -15,18 +18,12 @@ function MarketItem (props) {
     const [isItemInWatchlist, setItemInWatchlist] = useState(false);
 
     const myRef = useRef(null);
+    const operationRef = useRef();
     const chartRef = useRef(null);
-    const [scrollTop, setScrollTop] = useState(0);
     const [asset, setAsset] = useState();
 
-    function onScroll () {
-        const scrollTop = myRef.current.scrollTop;
-        setScrollTop(scrollTop);
-    };
-
-
     async function fetchMarketItemData (symbol, timeframe) {
-        const resp = await fetch('/v1/market/load_asset', {
+        const resp = await fetch(API_URL + '/market/load_asset', {
             method: "post",
             headers: { "Content-Type": "application/json"},
             body: JSON.stringify({
@@ -42,7 +39,7 @@ function MarketItem (props) {
     }
 
     async function addToWatchlist (userId, assetSymbol, assetName) {
-        const resp = await fetch('/v1/watchlist/add_asset', {
+        const resp = await fetch(API_URL + '/watchlist/add_asset', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -58,7 +55,7 @@ function MarketItem (props) {
     }
 
     async function removeFromWatchlist (userId, assetSymbol, assetName) {
-        const resp = await fetch('/v1/watchlist/remove_asset', {
+        const resp = await fetch(API_URL + '/watchlist/remove_asset', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -74,7 +71,7 @@ function MarketItem (props) {
     }
 
     async function checkIfItemInWatchlist (userId, assetSymbol, assetName) {
-        const resp = await fetch('/v1/watchlist/load_watchlist', {
+        const resp = await fetch(API_URL + '/watchlist/load_watchlist', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -149,10 +146,9 @@ function MarketItem (props) {
 
     return (
         <div className="market_element">
-        <NavBar userId={userId}/>
+        <NavBar userId={userId} API_URL={API_URL}/>
         <div className="market_container"
-            ref={myRef}
-            onScroll={onScroll}>
+            ref={myRef}>
             {asset ? (
                 <div>
                     <div className="market_item_title">
@@ -168,13 +164,20 @@ function MarketItem (props) {
                                 .then(checkIfItemInWatchlist(user_id, asset_symbol, asset_name))}>Add To Watchlist &#43;</button>
                         }
                     </div>
-                    <div className="market_item_timestamp">
-                        <button className={timeframe === '30min' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, '30min')}>30 min</button>
-                        <button className={timeframe === '60min' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, '60min')}>60 min</button>
-                        <button className={timeframe === 'daily' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, 'daily')}>Daily</button>
-                        <button className={timeframe === 'weekly' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, 'weekly')}>Weekly</button>
+                    <div className="market_item_timestamp_buysell_container">
+                        <div className="market_item_timestamp">
+                            <button className={timeframe === '30min' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, '30min')}>30 min</button>
+                            <button className={timeframe === '60min' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, '60min')}>60 min</button>
+                            <button className={timeframe === 'daily' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, 'daily')}>Daily</button>
+                            <button className={timeframe === 'weekly' ? 'timeframe_button_active' : null} onClick={() => fetchData(asset_symbol, 'weekly')}>Weekly</button>
+                        </div>
+                        <div className="market_item_buysell">
+                            <button className="market_item_button buy" onClick={() => operationRef.current?.setComponentVisibility(true, true)}>BUY</button>
+                            <button className="market_item_button sell" onClick={() => operationRef.current?.setComponentVisibility(true, false)}>SELL</button>
+                        </div>
                     </div>
-                    <CandleStickChart ref={chartRef} prices={asset[0].prices.reverse()} />
+                    <CandleStickChart ref={chartRef} prices={asset[0].prices} />
+                    <OperationWindow ref={operationRef} user_id={user_id} asset_symbol={asset_symbol} asset_name={asset_name} API_URL={API_URL}/>
                 </div>
             ) : asset_symbol ?
                     <div></div> :
