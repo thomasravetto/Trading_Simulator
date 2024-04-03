@@ -7,7 +7,10 @@ import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/dashboard/Dashboard';
 import MarketItem from './components/market/MarketItem';
 
-const SERVER_URL = window.location.origin;
+// const SERVER_URL = window.location.origin;
+
+// Dev
+const SERVER_URL = 'https://localhost:3500';
 
 const API_URL = SERVER_URL + '/v1';
 
@@ -87,14 +90,14 @@ function App() {
             !sessionChecked ?
               <p>Loading</p> :
               isAuthenticated ?
-                <Dashboard username={username} email={email} userId={userId} balance={balance}/> :
+                <Dashboard username={username} email={email} userId={userId} balance={balance} API_URL={API_URL}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
           <Route path='/market' element= {
             !sessionChecked ?
               <p>Loading</p> :
               isAuthenticated ?
-                <MarketItem username={username} email={email} userId={userId}/> :
+                <MarketItem username={username} email={email} userId={userId} API_URL={API_URL}/> :
                 <Navigate replace to={'/auth/login'}/>
           }/>
         </Routes>

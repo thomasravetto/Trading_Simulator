@@ -3,6 +3,9 @@
   --purple: #6969d3;
   --green: #96E9C6;
   --neon_green: #15F5BA;
+  --dark_green: #96E9C6;
+  --medium_green: #b9f1da;
+  --light_green: #d6f2e6;
 }
 
 html {
@@ -385,6 +388,11 @@ a:has(.navbar_list_element) {
   padding: 10px;
 }
 
+.portfolio_chart_container canvas {
+  height: 80px;
+  width: 350px;
+}
+
 /* Dashboard */
 
 /* WatchList */
@@ -433,7 +441,6 @@ a:has(.navbar_list_element) {
 .watchlist_skeleton:active, .watchlist_item:active {
   transform: scale(0.95);
 }
-
 
 .watchlist_skeleton_button {
   background-color: rgb(255, 255, 255, 0.5);
@@ -542,6 +549,80 @@ a:has(.navbar_list_element) {
   cursor: pointer;
 }
 
+.portfolio_container a {
+  background-color: rgb(150, 233, 198, 0.6);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 15px 30px rgba(158, 158, 158, 0.4);
+  aspect-ratio: 4/1;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 100ms;
+  margin: 40px 0;
+}
+
+.portfolio_container a:nth-child(3n + 2) {
+  background-color: var(--dark_green);
+  color: black;
+}
+
+.portfolio_container a:nth-child(3n + 0) {
+  background-color: var(--medium_green);
+  color: black;
+}
+
+.portfolio_container a:nth-child(3n + 1) {
+  background-color: var(--light_green);
+  color: black;
+}
+
+.portfolio_item {
+  display: flex;
+  justify-content: space-between;
+  aspect-ratio: 4/1;
+}
+
+.portfolio_title_graph_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
+
+.portfolio_item_title {
+  display: flex;
+  align-items: center;
+  padding: 1vw;
+  padding-bottom: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio_item_name {
+  font-size: 1.5em;
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolio_item_symbol {
+  white-space: nowrap;
+}
+
+.portfolio_item_stats {
+  padding-right: 30px;
+  padding-top: 1vw;
+}
+
+.portfolio_graph_container {
+  /* flex-grow: 1; */
+  padding: 0 20px;
+  position: relative;
+  top: -10px;
+}
+
 
 /* Portfolio */
 
@@ -549,14 +630,14 @@ a:has(.navbar_list_element) {
 
 .market_element {
   background-color: rgb(250, 250, 250);
-  height: 100%;
+  height: 100vh;
 }
 
 .market_container {
   background-color: white;
   box-shadow: 0px 50px 60px rgba(158, 158, 158, 0.15);
   height: 30vh;
-  min-height: 80vh;
+  min-height: 700px;
   width: 90vw;
   border-radius: 50px;
   transform: translate(-50%);
@@ -565,6 +646,7 @@ a:has(.navbar_list_element) {
   bottom: 150px;
   padding-bottom: 30px;
   overflow: hidden;
+  margin-bottom: 50px;
 }
 
 .market_item_title p{
@@ -578,8 +660,14 @@ a:has(.navbar_list_element) {
   justify-content: space-between;
 }
 
-.market_item_timestamp {
-  margin: 20px;
+.market_item_timestamp_buysell_container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.market_item_timestamp, .market_item_buysell {
+  margin: 5px 20px;
   border-radius: 5px;
 }
 
@@ -587,6 +675,7 @@ a:has(.navbar_list_element) {
   padding: 5px;
   border: none;
   transition: 100ms;
+  cursor: pointer;
 }
 
 .market_item_timestamp button:first-child {
@@ -605,6 +694,51 @@ a:has(.navbar_list_element) {
 
 .market_item_timestamp button:active {
   background-color: rgb(199, 199, 199);
+}
+
+.market_item_buysell button {
+  padding: 5px 10px;
+  border: none;
+  transition: 100ms;
+  cursor: pointer;
+}
+
+.market_item_buysell button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.market_item_buysell button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.buy {
+  background-color: #090088;
+  color: white;
+  font-weight: 600;
+}
+
+.sell {
+  background-color: #CF0000;
+  color: white;
+  font-weight: 600;
+}
+
+.market_item_buy:hover {
+  background-color: blue;
+}
+
+.market_item_sell:hover {
+  background-color: red;
+}
+
+.market_item_buy:active {
+  background-color: blue;
+}
+
+.market_item_sell:active {
+  background-color: red;
 }
 
 .market_item_add_to_watchlist, .market_item_remove_from_watchlist {
@@ -635,6 +769,111 @@ a:has(.navbar_list_element) {
 .market_item_no_asset_title_container {
   text-align: center;
 }
+
+
+/* Operations Window */
+
+.operations_window_container {
+  border-radius: 30px;
+  box-shadow: 0px 0px 100px rgb(205, 205, 205);
+  background-color: white;
+  z-index: 2;
+  height: 600px;
+  width: 450px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.operations_input_container {
+  text-align: left;
+  font-size: xx-large;
+}
+
+.operations_input_container input {
+  max-width: 60%;
+  border: none;
+  font-size: xx-large;
+  text-align: right;
+}
+
+.operations_input_container input:focus {
+  outline: none;
+}
+
+.operations_window {
+  width: 100%;
+}
+
+.operations_asset_info {
+  width: 100%;
+  padding: 20px;
+  transition: 200ms;
+}
+
+.operations_asset_info div h1, .operations_asset_info div p {
+  font-size: xx-large;
+  display: inline;
+}
+
+.operations_asset_info div p {
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.operations_buysell_container {
+  width: 100%;
+}
+
+.operations_buysell_container button{
+  width: 50%;
+  height: 60px;
+  border: none;
+  font-size: larger;
+  cursor: pointer;
+}
+
+.operation_button {
+  border: none;
+  padding: 10px;
+  width: 90%;
+  height: 50px;
+  margin: 20px;
+  border-radius: 12px;
+  font-size: larger;
+  cursor: pointer;
+  transition: 200ms;
+}
+
+.operation_message {
+  text-align: center;
+  font-size: large;
+}
+
+.close_button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: xx-large;
+  position: relative;
+  left: 390px;
+  bottom: 60px;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.operations_window_hidden {
+  display: none;
+}
+
+/* Operations Window */
 
 
 /* Market */
