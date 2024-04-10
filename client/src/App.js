@@ -51,6 +51,20 @@ function App() {
       }
     }
 
+    async function getUserBalance (userId) {
+      const resp = await fetch(API_URL + '/users/get_balance', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          user_id: userId,
+        })
+      });
+
+      const data = await resp.json();
+
+      return data.balance;
+    }
+
   useEffect(() => {
     async function handleSessionChecker () {
       const sessionStatus = await sessionChecker();
@@ -59,14 +73,15 @@ function App() {
         setId(sessionStatus.id);
         setUsername(sessionStatus.username);
         setEmail(sessionStatus.email);
-        setBalance(sessionStatus.balance);
       }
+      const userBalance = await getUserBalance(sessionStatus.id);
+      setBalance(userBalance);
       setSessionChecked(true);
     }
 
     handleSessionChecker();
     // setDummySession();
-  })
+  }, [])
 
   function setDummySession () {
     setAuthenticated(true);
