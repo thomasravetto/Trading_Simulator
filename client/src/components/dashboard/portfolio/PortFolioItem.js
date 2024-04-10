@@ -3,6 +3,7 @@ import PortfolioLineChart from '../chart/PorfolioLineChart';
 
 function PortfolioItem (props) {
     const asset_info = props.asset;
+    const lastPrice = props.lastPrice || '';
     const [prices, setPrices] = useState();
 
     const API_URL = props.API_URL;
@@ -65,13 +66,13 @@ function PortfolioItem (props) {
             </div>
             <div className='portfolio_item_stats'>
                 {prices && prices.length > 0 && (
-                    <h1 className='portfolio_item_price'>{prices[prices.length - 1].slice(0, -2)}$</h1>
+                    <h1 className='portfolio_item_price'>{lastPrice.slice(0, -2)}$</h1>
                 )}
                 <h3>You Own:</h3>
                 {prices && prices.length > 0 && (
                     <div>
                         <p>{asset_info.quantity} Shares</p>
-                        <p>{(prices[prices.length - 1] * asset_info.quantity).toFixed(2)}$</p>
+                        <p>{(lastPrice * asset_info.quantity).toFixed(2)}$</p>
                     </div>
                      )}
             </div>

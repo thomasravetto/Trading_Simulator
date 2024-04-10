@@ -133,6 +133,7 @@ function Dashboard (props) {
     const [balance, setBalance] = useState(props.balance);
     const [watchlist, setWatchlist] = useState([]); //set back to empty
     const [portfolio, setPortfolio] = useState([]);
+    const [mergedWatchlistPortfolio, setMerged] = useState([]);
     const [userImage, setUserImage] = useState(null);
 
     const focus = () => {
@@ -175,7 +176,24 @@ function Dashboard (props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'user_id': userId
+                user_id: userId
+            })
+        });
+
+        const data = await resp.json();
+
+        return data;
+    }
+
+    async function getLastPrices (assetList) {
+        const resp = await fetch(API_URL + '/market/get_latest_data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // The function accepts also a list
+                asset_symbols: assetList
             })
         });
 
@@ -204,9 +222,27 @@ function Dashboard (props) {
 
             return formattedData;
         } else {
-            return data;
+            return [];
         }
 
+    }
+
+    function mergeWatchlistPortfolio (watchlist, portfolio) {
+        let merged = [];
+
+        for (let asset of watchlist) {
+            if (asset.metadata.symbol && !merged.includes(asset.metadata.symbol)) {
+                merged.push(asset.metadata.symbol);
+            }
+        }
+
+        for (let asset of portfolio) {
+            if (asset.asset_symbol && !merged.includes(asset.asset_symbol)) {
+                merged.push(asset.asset_symbol);
+            }
+        }
+
+        return merged;
     }
 
     useEffect(() => {
@@ -223,6 +259,28 @@ function Dashboard (props) {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        async function fetchData () {
+            const mergedWatchlistPortfolio = mergeWatchlistPortfolio(watchlist, portfolio);
+
+            if (mergedWatchlistPortfolio.length > 0) {
+                const lastPrices = await getLastPrices(mergedWatchlistPortfolio);
+
+                let formattedLastPrices = {};
+
+                for (const asset of lastPrices) {
+                    formattedLastPrices[asset.symbol] = asset.price;
+                }
+
+                setMerged(formattedLastPrices);
+            }
+
+        }
+        if (watchlist && portfolio) {
+            fetchData();
+        }
+    }, [watchlist, portfolio]);
+
     return (
         <div className='dashboard_element'>
             <NavBar ref={inputRef} userId={userId} API_URL={API_URL}/>
@@ -232,14 +290,14 @@ function Dashboard (props) {
                     src= {userImage}
                     alt="gray user profile icon"/>
                     <p className='user_username'>{props.username[0].toUpperCase() + props.username.substring(1)}</p>
-                    <p className="user_balance"> {balance}$</p>
+                    <p className="user_balance"> {balance.slice(0, -3)}$</p>
                 </div>
                 <div className='watchlist_transactions_container'>
                     <div className='watchlist_container'>
                         <h3 className='watchlist_title'>WatchList</h3>
                         {
                             watchlist && watchlist.length > 0 ? watchlist.map((asset) => {
-                                return <Link key={asset.metadata.name} to={{pathname: '/market'}} state={{ symbol: asset.metadata.symbol, name: asset.metadata.name, userId: userId }}><WatchListItem asset={asset}/></Link>
+                                return <Link key={asset.metadata.name} to={{pathname: '/market'}} state={{ symbol: asset.metadata.symbol, name: asset.metadata.name, userId: userId }}><WatchListItem asset={asset} lastPrice={mergedWatchlistPortfolio[asset.metadata.symbol]}/></Link>
                             }) :
                             <div></div>
                         }
@@ -250,8 +308,8 @@ function Dashboard (props) {
                     <div className='portfolio_container'>
                         <h3 className='portfolio_title'>Portfolio</h3>
                         {
-                            watchlist && watchlist.length > 0 ? portfolio.map((asset) => {
-                                return <Link key={asset.asset_name} to={{pathname: '/market'}} state={{ symbol: asset.asset_symbol, name: asset.asset_name, userId: userId }}><PortfolioItem asset={asset} API_URL={API_URL}/></Link>
+                            portfolio && portfolio.length > 0 ? portfolio.map((asset) => {
+                                return <Link key={asset.asset_name} to={{pathname: '/market'}} state={{ symbol: asset.asset_symbol, name: asset.asset_name, quantity: asset.quantity, userId: userId }}><PortfolioItem asset={asset} lastPrice={mergedWatchlistPortfolio[asset.asset_symbol]} API_URL={API_URL}/></Link>
                             }) :
                             <div></div>
                         }

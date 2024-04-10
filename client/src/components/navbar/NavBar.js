@@ -90,7 +90,7 @@ const NavBar = forwardRef((props, ref) => {
                                 const name = asset['2. name'];
                                 const currency = asset['8. currency'];
 
-                                return (<Link to={'/market'} state={{ symbol: symbol, name: name, userId: userId }} onClick={clearInput}>
+                                return (<Link to={'/market'} key={symbol} state={{ symbol: symbol, name: name, userId: userId }} onClick={clearInput}>
                                     <span className='navbar_list_element'>
                                         <h3 className='navbar_list_symbol'>{symbol}</h3>
                                         <p className='navbar_list_title'>{name}</p>

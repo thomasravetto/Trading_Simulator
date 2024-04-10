@@ -2,12 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import NavBar from "../navbar/NavBar";
 import CandleStickChart from "./chart/CandleStickChart";
 import OperationWindow from "./OperationWindow";
-import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 function MarketItem (props) {
     const location = useLocation();
-    const { symbol, name, userId } = location.state || {};
+    const { symbol, name, quantity, userId } = location.state || {};
 
     const API_URL = props.API_URL;
 
@@ -155,11 +154,16 @@ function MarketItem (props) {
                         <div className="market_item_title_container">
                             <b>{asset_symbol.toUpperCase()}</b>
                             <p> {name}</p>
+                            {
+                                quantity ?
+                                <p style={{fontSize: 'medium'}}> You own {quantity} shares</p> :
+                                <p></p>
+                            }
                         </div>
                         {
                             isItemInWatchlist ?
                                 <button className="market_item_remove_from_watchlist" onClick={() => removeFromWatchlist(user_id, asset_symbol, asset_name)
-                                .then(checkIfItemInWatchlist(user_id, asset_symbol, asset_name))}>Remove From Watchlist &#10060;</button> :
+                                .then(checkIfItemInWatchlist(user_id, asset_symbol, asset_name))}>Remove From Watchlist &#215;</button> :
                                 <button className="market_item_add_to_watchlist" onClick={() => addToWatchlist(user_id, asset_symbol, asset_name)
                                 .then(checkIfItemInWatchlist(user_id, asset_symbol, asset_name))}>Add To Watchlist &#43;</button>
                         }
@@ -177,7 +181,7 @@ function MarketItem (props) {
                         </div>
                     </div>
                     <CandleStickChart ref={chartRef} prices={asset[0].prices} />
-                    <OperationWindow ref={operationRef} user_id={user_id} asset_symbol={asset_symbol} asset_name={asset_name} API_URL={API_URL}/>
+                    <OperationWindow ref={operationRef} user_id={user_id} asset_symbol={asset_symbol} asset_name={asset_name} asset_quantity={quantity} API_URL={API_URL}/>
                 </div>
             ) : asset_symbol ?
                     <div></div> :

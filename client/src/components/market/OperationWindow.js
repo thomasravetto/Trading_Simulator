@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 const OperationWindow = forwardRef((props, ref) => {
-const { user_id, asset_symbol, asset_name, API_URL } = props;
+const { user_id, asset_symbol, asset_name, asset_quantity, API_URL } = props;
     
     const [price, setAssetPrice] = useState('');
     const [operation_value, setOperationValue] = useState(100);
@@ -14,18 +14,23 @@ const { user_id, asset_symbol, asset_name, API_URL } = props;
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                asset_symbol: asset_symbol
+                asset_symbols: asset_symbol
             })
         });
 
         const latestData = await resp.json();
 
-        return latestData;
+        if (latestData.length > 0) {
+            return latestData[0];
+        } else {
+            return latestData;
+        }
+
     }
 
     function calculateQuantity (operation_cost, price) {
         const quantity = operation_cost / price;
-        setQuantity(quantity);
+        setQuantity(quantity.toFixed(6));
         return quantity;
     }
 
@@ -39,8 +44,6 @@ const { user_id, asset_symbol, asset_name, API_URL } = props;
             let data;
 
             if (operation === 'buy') {
-
-                console.log(price, quantity);
 
                 const resp = await fetch(API_URL + '/portfolio/buy_asset', {
                     method: 'post',
@@ -56,9 +59,13 @@ const { user_id, asset_symbol, asset_name, API_URL } = props;
 
                 data = await resp.json();
 
-            } else if (operation === 'short') {
+            } else if (operation === 'sell') {
 
-                const resp = await fetch(API_URL + '/portfolio/short_asset', {
+                if (parseFloat(asset_quantity) < parseFloat(quantity)) {
+                    throw new Error('Insufficient quantity to sell');
+                }
+
+                const resp = await fetch(API_URL + '/portfolio/sell_asset', {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -129,12 +136,12 @@ const { user_id, asset_symbol, asset_name, API_URL } = props;
                 </div>
                 <div className="operation_message">
                     <p>You are {buying_operation ? 'buying' : 'selling'}:</p>
-                    <p>{quantity.toFixed(4)} Shares</p>
+                    <p>{quantity} Shares</p>
                 </div>
                 {
                     buying_operation ?
                     <button className="operation_button buy" onClick={() => handleTransaction(user_id, asset_symbol, asset_name, price, quantity, 'buy')}>BUY</button> :
-                    <button className="operation_button sell" onClick={() => handleTransaction(user_id, asset_symbol, asset_name, price, quantity, 'short')}>SELL</button>
+                    <button className="operation_button sell" onClick={() => handleTransaction(user_id, asset_symbol, asset_name, price, quantity, 'sell')}>SELL</button>
                 }
             </div>
         </div>

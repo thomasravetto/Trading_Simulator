@@ -37,6 +37,7 @@ function LoginForm (props) {
             })
         });
 
+
         const data = await resp.json();
 
         if (data.username) {
