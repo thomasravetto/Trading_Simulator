@@ -873,6 +873,63 @@ a:has(.navbar_list_element) {
   display: none;
 }
 
+.operations_success_background {
+  border-radius: 30px;
+  box-shadow: 0px 0px 100px rgb(205, 205, 205);
+  background-color: white;
+  z-index: 2;
+  height: 500px;
+  width: 350px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  overflow: hidden;
+}
+
+.operate_again_button {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: medium;
+  cursor: pointer;
+}
+
+.buy_again {
+  background-color: rgb(201, 255, 201);
+  border: 1px solid green;
+}
+
+.sell_again {
+background-color: rgb(255, 195, 195);
+border: 1px solid red;
+}
+
+.close_button_success {
+  background-color: transparent;
+  border: none;
+  color: rgb(19, 18, 18);
+  font-size: xx-large;
+  cursor: pointer;
+  font-weight: 300;
+  position: absolute;
+  top: 6px;
+  right: 20px;
+}
+
+.operations_error_container {
+  background-color: rgb(255, 195, 195);
+  border: 1px solid red;
+  color: red;
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%;
+  text-align: center;
+}
+
 /* Operations Window */
 
 
