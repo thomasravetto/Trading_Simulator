@@ -51,7 +51,7 @@ function PortfolioItem (props) {
             }
         }
         fetchData();
-    }, [])
+    }, []);
 
     return (
         <div className='portfolio_item'>

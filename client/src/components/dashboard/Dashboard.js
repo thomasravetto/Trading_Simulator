@@ -135,6 +135,8 @@ function Dashboard (props) {
     const [portfolio, setPortfolio] = useState([]);
     const [mergedWatchlistPortfolio, setMerged] = useState([]);
     const [userImage, setUserImage] = useState(null);
+    const [PL, setPL] = useState(0);
+    const [equity, setEquity] = useState(0);
 
     const focus = () => {
         inputRef.current.focus();
@@ -245,6 +247,27 @@ function Dashboard (props) {
         return merged;
     }
 
+    function calculatePL (totalProfit, balance, initialBalance) {
+        const currentEquity = balance + totalProfit;
+        const difference = currentEquity - initialBalance;
+
+        const plType = difference >= 0 ? 'Profit' : 'Loss';
+
+        return {
+            currentEquity: currentEquity,
+            difference: difference,
+            plType: plType
+        };
+    }
+
+    function calculateTotalProfit () {
+        let totalProfit = 0;
+        for (let asset of portfolio) {
+            totalProfit += (mergedWatchlistPortfolio[asset.asset_symbol] * asset.quantity);
+        }
+        return totalProfit;
+    }
+
     useEffect(() => {
         async function fetchData () {
             const watchlistData = await fetchWatchlistData(userId);
@@ -281,6 +304,17 @@ function Dashboard (props) {
         }
     }, [watchlist, portfolio]);
 
+    useEffect(() => {
+        // Setting initialBalance to 10000 as it is the default value in database
+        const initialBalance = 10000;
+
+        const totalProfit = calculateTotalProfit();
+        const plResult = calculatePL(totalProfit, Number(balance), initialBalance);
+
+        setEquity(plResult.currentEquity);
+        setPL(plResult.difference);
+    }, [portfolio, mergedWatchlistPortfolio])
+
     return (
         <div className='dashboard_element'>
             <NavBar ref={inputRef} userId={userId} API_URL={API_URL}/>
@@ -290,7 +324,26 @@ function Dashboard (props) {
                     src= {userImage}
                     alt="gray user profile icon"/>
                     <p className='user_username'>{props.username[0].toUpperCase() + props.username.substring(1)}</p>
-                    <p className="user_balance"> {balance.slice(0, -3)}$</p>
+                    <div>
+                        <p>Balance</p>
+                        <p className="user_balance">{balance.slice(0, -3)}$</p>
+                    </div>
+                    <div>
+                        <p>Portfolio</p>
+                        <p className="user_balance">{(equity - balance).toFixed(3)}$</p>
+                    </div>
+                    <div>
+                        <p>Equity</p>
+                        <p className="user_balance">{equity.toFixed(3)}$</p>
+                    </div>
+                    <div>
+                        <p>P/L</p>
+                        {
+                        PL >= 0 ?
+                            <p className="user_balance" style={{color: 'green'}}>+ {PL.toFixed(3)}$</p> :
+                            <p className="user_balance" style={{color: 'red'}}>{PL.toFixed(3)}$</p>
+                        }
+                    </div>
                 </div>
                 <div className='watchlist_transactions_container'>
                     <div className='watchlist_container'>
