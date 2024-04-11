@@ -329,6 +329,15 @@ a:has(.navbar_list_element) {
 
 .dashboard_user_container {
   padding: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.dashboard_user_container div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user_image {
@@ -341,17 +350,11 @@ a:has(.navbar_list_element) {
   font-size:x-large;
   font-weight: bold;
   display: inline;
-  position: relative;
-  bottom: 25px;
-  left: 25px;
 }
 
 .user_balance {
-  bottom: 25px;
   display: inline;
   font-size: x-large;
-  left: 45px;
-  position: relative;
 }
 
 .watchlist_transactions_container {

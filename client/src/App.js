@@ -7,10 +7,10 @@ import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/dashboard/Dashboard';
 import MarketItem from './components/market/MarketItem';
 
-// const SERVER_URL = window.location.origin;
+const SERVER_URL = window.location.origin;
 
 // Dev
-const SERVER_URL = 'https://localhost:3500';
+// const SERVER_URL = 'https://localhost:3500';
 
 const API_URL = SERVER_URL + '/v1';
 
