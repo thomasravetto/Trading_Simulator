@@ -1,5 +1,3 @@
 [submodule "server"]
 	path = server
 	url = https://github.com/thomasravetto/Trading_simulator_server.git
-[submodule "https://github.com/thomasravetto/Express_Server_Template.git"]
-	url = https://github.com/thomasravetto/Trading_simulator_server.git
