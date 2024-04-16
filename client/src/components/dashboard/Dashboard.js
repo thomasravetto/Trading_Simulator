@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { useRef, forwardRef } from 'react';
 import PortfolioItem from "./portfolio/PortFolioItem";
+import defaultImage from '../../users_propic/noimage.png';
 
 const dummy = [
      [
@@ -127,14 +128,14 @@ function Dashboard (props) {
 
     const API_URL = props.API_URL;
 
-    const [username, setUsername] = useState(props.username);
-    const [email, setEmail] = useState(props.email);
-    const [userId, setUserId] = useState(props.userId);
-    const [balance, setBalance] = useState(props.balance);
-    const [watchlist, setWatchlist] = useState([]); //set back to empty
+    // const [username, setUsername] = useState(props.username);
+    // const [email, setEmail] = useState(props.email);
+    const [userId, setUserId] = useState(props.userId || 0);
+    const [balance, setBalance] = useState(props.balance || 0);
+    const [watchlist, setWatchlist] = useState([]);
     const [portfolio, setPortfolio] = useState([]);
     const [mergedWatchlistPortfolio, setMerged] = useState([]);
-    const [userImage, setUserImage] = useState(null);
+    const [userImage, setUserImage] = useState(defaultImage);
     const [PL, setPL] = useState(0);
     const [equity, setEquity] = useState(0);
 
@@ -146,12 +147,14 @@ function Dashboard (props) {
         import(`../../users_propic/userid${userId}.jpeg`).then(image => {
           setUserImage(image.default)
         }).catch(() => {
-            import(`../../users_propic/noimage.png`).then(image => {
-                setUserImage(image.default)
-            })
+            console.error(`Failed to load image for user with id ${userId}`);
         });
       };
-    loadImage(userId);
+
+      // Calling loadImage just at first rendering to limit memory usage
+      if (userImage === defaultImage) {
+          loadImage(userId);
+      }
 
     // formats the data received from the api to a simpler object
     function formatAssetData (data) {
@@ -248,24 +251,34 @@ function Dashboard (props) {
     }
 
     function calculatePL (totalProfit, balance, initialBalance) {
-        const currentEquity = balance + totalProfit;
-        const difference = currentEquity - initialBalance;
-
-        const plType = difference >= 0 ? 'Profit' : 'Loss';
-
-        return {
-            currentEquity: currentEquity,
-            difference: difference,
-            plType: plType
-        };
+        if (totalProfit && balance && initialBalance) {
+            const currentEquity = balance + totalProfit;
+            const difference = currentEquity - initialBalance;
+    
+            const plType = difference >= 0 ? 'Profit' : 'Loss';
+    
+            return {
+                currentEquity: currentEquity,
+                difference: difference,
+                plType: plType
+            };
+        } else return {
+                currentEquity: 0,
+                difference: 0,
+                plType: 'Profit'
+        }
     }
 
     function calculateTotalProfit () {
         let totalProfit = 0;
-        for (let asset of portfolio) {
-            totalProfit += (mergedWatchlistPortfolio[asset.asset_symbol] * asset.quantity);
+        if (mergedWatchlistPortfolio && portfolio && portfolio.length > 0) {
+            for (let asset of portfolio) {
+                if (mergedWatchlistPortfolio[asset.asset_symbol] && asset.quantity) {
+                    totalProfit += (mergedWatchlistPortfolio[asset.asset_symbol] * asset.quantity);
+                }
+            }
+            return totalProfit;
         }
-        return totalProfit;
     }
 
     useEffect(() => {
@@ -280,7 +293,7 @@ function Dashboard (props) {
             }
         }
         fetchData();
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
         async function fetchData () {
@@ -302,76 +315,80 @@ function Dashboard (props) {
         if (watchlist && portfolio) {
             fetchData();
         }
-    }, [watchlist, portfolio]);
+    }, [watchlist.length, portfolio.length]);
 
     useEffect(() => {
         // Setting initialBalance to 10000 as it is the default value in database
         const initialBalance = 10000;
-
         const totalProfit = calculateTotalProfit();
-        const plResult = calculatePL(totalProfit, Number(balance), initialBalance);
+        const plResult = calculatePL(totalProfit, balance, initialBalance);
 
         setEquity(plResult.currentEquity);
         setPL(plResult.difference);
-    }, [portfolio, mergedWatchlistPortfolio])
+    }, [portfolio, mergedWatchlistPortfolio]);
+
 
     return (
         <div className='dashboard_element'>
             <NavBar ref={inputRef} userId={userId} API_URL={API_URL}/>
-            <div className='dashboard_container'>
-                <div className='dashboard_user_container'>
-                    <img className='user_image'
-                    src= {userImage}
-                    alt="gray user profile icon"/>
-                    <p className='user_username'>{props.username[0].toUpperCase() + props.username.substring(1)}</p>
-                    <div>
-                        <p>Balance</p>
-                        <p className="user_balance">{balance.slice(0, -3)}$</p>
-                    </div>
-                    <div>
-                        <p>Portfolio</p>
-                        <p className="user_balance">{(equity - balance).toFixed(3)}$</p>
-                    </div>
-                    <div>
-                        <p>Equity</p>
-                        <p className="user_balance">{equity.toFixed(3)}$</p>
-                    </div>
-                    <div>
-                        <p>P/L</p>
-                        {
-                        PL >= 0 ?
-                            <p className="user_balance" style={{color: 'green'}}>+ {PL.toFixed(3)}$</p> :
-                            <p className="user_balance" style={{color: 'red'}}>{PL.toFixed(3)}$</p>
-                        }
-                    </div>
-                </div>
-                <div className='watchlist_transactions_container'>
-                    <div className='watchlist_container'>
-                        <h3 className='watchlist_title'>WatchList</h3>
-                        {
-                            watchlist && watchlist.length > 0 ? watchlist.map((asset) => {
-                                return <Link key={asset.metadata.name} to={{pathname: '/market'}} state={{ symbol: asset.metadata.symbol, name: asset.metadata.name, userId: userId }}><WatchListItem asset={asset} lastPrice={mergedWatchlistPortfolio[asset.metadata.symbol]}/></Link>
-                            }) :
-                            <div></div>
-                        }
-                        <div  onClick={focus}>
-                            <WatchListSkeleton/>
+            {
+                portfolio && balance > 0 ?
+                <div className='dashboard_container'>
+                    <div className='dashboard_user_container'>
+                        <img className='user_image'
+                        src= {userImage}
+                        alt="gray user profile icon"/>
+                        <p className='user_username'>{props.username[0].toUpperCase() + props.username.substring(1)}</p>
+                        <div>
+                            <p>Margin</p>
+                            <p className="user_balance">{balance.toFixed(3)}$</p>
+                        </div>
+                        <div>
+                            <p>Portfolio</p>
+                            <p className="user_balance">{equity > 0 ? (equity - balance).toFixed(3) : 0}$</p>
+                        </div>
+                        <div>
+                            <p>Equity</p>
+                            <p className="user_balance">{equity.toFixed(3)}$</p>
+                        </div>
+                        <div>
+                            <p>P/L</p>
+                            {
+                            PL >= 0 ?
+                                <p className="user_balance" style={{color: 'green'}}>+ {PL.toFixed(3)}$</p> :
+                                <p className="user_balance" style={{color: 'red'}}>{PL.toFixed(3)}$</p>
+                            }
                         </div>
                     </div>
-                    <div className='portfolio_container'>
-                        <h3 className='portfolio_title'>Portfolio</h3>
-                        {
-                            portfolio && portfolio.length > 0 ? portfolio.map((asset) => {
-                                return <Link key={asset.asset_name} to={{pathname: '/market'}} state={{ symbol: asset.asset_symbol, name: asset.asset_name, quantity: asset.quantity, userId: userId }}><PortfolioItem asset={asset} lastPrice={mergedWatchlistPortfolio[asset.asset_symbol]} API_URL={API_URL}/></Link>
-                            }) :
-                            <div></div>
-                        }
-                        <div onClick={focus}>
-                            <PortFolioSkeleton/>
+                    <div className='watchlist_transactions_container'>
+                        <div className='watchlist_container'>
+                            <h3 className='watchlist_title'>WatchList</h3>
+                            {
+                                watchlist && watchlist.length > 0 ? watchlist.map((asset) => {
+                                    return <Link key={asset.metadata.name} to={{pathname: '/market'}} state={{ symbol: asset.metadata.symbol, name: asset.metadata.name, userId: userId }}><WatchListItem asset={asset} lastPrice={mergedWatchlistPortfolio[asset.metadata.symbol]}/></Link>
+                                }) :
+                                <div></div>
+                            }
+                            <div  onClick={focus}>
+                                <WatchListSkeleton/>
+                            </div>
+                        </div>
+                        <div className='portfolio_container'>
+                            <h3 className='portfolio_title'>Portfolio</h3>
+                            {
+                                portfolio && portfolio.length > 0 ? portfolio.map((asset) => {
+                                    return <Link key={asset.asset_name} to={{pathname: '/market'}} state={{ symbol: asset.asset_symbol, name: asset.asset_name, quantity: asset.quantity, userId: userId }}><PortfolioItem userId={userId} asset={asset} lastPrice={mergedWatchlistPortfolio[asset.asset_symbol]} API_URL={API_URL}/></Link>
+                                }) :
+                                <div></div>
+                            }
+                            <div onClick={focus}>
+                                <PortFolioSkeleton/>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> :
+            <div>Loading</div>
+            }
         </div>
     )
 }

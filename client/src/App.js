@@ -7,10 +7,10 @@ import RegisterForm from './components/auth/RegisterForm';
 import Dashboard from './components/dashboard/Dashboard';
 import MarketItem from './components/market/MarketItem';
 
-const SERVER_URL = window.location.origin;
+// const SERVER_URL = window.location.origin;
 
 // Dev
-// const SERVER_URL = 'https://localhost:3500';
+const SERVER_URL = 'https://localhost:3500';
 
 const API_URL = SERVER_URL + '/v1';
 
@@ -20,14 +20,14 @@ function App() {
   const [userId, setId] = useState();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [balance, setBalance] = useState(null);
+  const [balance, setBalance] = useState(0);
   const [sessionChecked, setSessionChecked] = useState(false);
 
   function loadUser (user, callback) {
     setId(user.id);
     setUsername(user.username)
     setEmail(user.email)
-    setBalance(user.balance);
+    setBalance(Number(user.balance));
     setAuthenticated(true);
     if (callback) {
       callback();
@@ -62,7 +62,9 @@ function App() {
 
       const data = await resp.json();
 
-      return data.balance;
+      const balance = data.balance;
+      
+      return balance;
     }
 
   useEffect(() => {
@@ -75,7 +77,7 @@ function App() {
         setEmail(sessionStatus.email);
       }
       const userBalance = await getUserBalance(sessionStatus.id);
-      setBalance(userBalance);
+      setBalance(Number(userBalance));
       setSessionChecked(true);
     }
 

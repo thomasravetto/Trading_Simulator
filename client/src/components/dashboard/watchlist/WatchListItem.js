@@ -3,7 +3,7 @@ import LineChart from '../chart/LineChart';
 function WatchListItem (props) {
     const asset_info = props.asset.metadata;
     const asset_prices = props.asset.prices.reverse();
-    const lastPrice = props.lastPrice || asset_prices[asset_prices.length - 1];
+    const lastPrice = props.lastPrice || '000.0000';
 
     function calculate_percentage (first_val, last_val) {
         return String(((last_val - first_val) / first_val) * 100).slice(0, 4);

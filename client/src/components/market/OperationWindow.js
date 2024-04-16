@@ -105,6 +105,11 @@ const { user_id, asset_symbol, asset_name, asset_quantity, API_URL } = props;
         setBuyingOperation(isBuying);
     }
 
+    function setMaxSellQuantity () {
+        setQuantity(asset_quantity);
+        setOperationValue((asset_quantity * price).toFixed(2))
+    }
+
     useEffect(() => {
         async function fetchData () {
             const latestData = await getLatestData(asset_symbol);
@@ -155,6 +160,10 @@ const { user_id, asset_symbol, asset_name, asset_quantity, API_URL } = props;
                         <div className="operations_input_container">
                             <input type="number" placeholder="Quantity" value={operation_value} onChange={(e) => setOperationValue(e.target.value >= 0 ? parseFloat(e.target.value) : 0)}></input>
                             <span>$</span>
+                            {
+                                !buying_operation &&
+                                <button className="sell_max_button" onClick={setMaxSellQuantity}>MAX</button>
+                            }
                         </div>
                         <div className="operation_message">
                             <p>You are {buying_operation ? 'buying' : 'selling'}:</p>

@@ -83,9 +83,9 @@ const NavBar = forwardRef((props, ref) => {
                         type='text'
                         onChange={searchSymbolOnStopTyping}>
                     </input>
-                    <div ref={assetListRef} className='navbar_asset_list'>
+                    <div ref={assetListRef} className={`navbar_asset_list ${assetList && assetList.length > 0 ? '' : 'hidden'}`}>
                         {
-                            assetList&& assetList.length > 0 ? assetList.map((asset) => {
+                            assetList && assetList.length > 0 ? assetList.map((asset) => {
                                 const symbol = asset['1. symbol'];
                                 const name = asset['2. name'];
                                 const currency = asset['8. currency'];

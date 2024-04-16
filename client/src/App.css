@@ -272,6 +272,10 @@ html, body {
   max-width: 100%;
 }
 
+.navbar_asset_list.hidden {
+  display: none;
+}
+
 .navbar_list_element h3, .navbar_list_element p {
   display: inline;
 }
@@ -482,7 +486,7 @@ a:has(.navbar_list_element) {
 }
 
 .watchlist_item_prices {
-  padding-left: 30px;
+  padding-left: 20px;
 }
 
 .percentage {
@@ -624,6 +628,67 @@ a:has(.navbar_list_element) {
   padding: 0 20px;
   position: relative;
   top: -10px;
+}
+
+.open_transactions_button_down {
+  border: none;
+  background-color: rgb(228, 255, 228);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  bottom: 20px;
+  left: calc(100% - 50px);
+  cursor: s-resize;
+}
+
+.open_transactions_button_up {
+  border: none;
+  background-color: rgb(228, 255, 228);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  bottom: 20px;
+  left: calc(100% - 50px);
+  cursor: n-resize;
+}
+
+.transactions_container {
+  height: 250px;
+  max-height: 300px; /* Set a maximum height */
+  overflow: hidden;
+  transition: ease-in-out 500ms;
+  background-color: rgb(218, 244, 218);
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.transactions_container_spacer {
+  height: 5px;
+}
+
+.transactions_container.hidden {
+  max-height: 0;
+}
+
+.portfolio_transaction_container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid rgb(221, 221, 221);
+}
+
+.portfolio_transaction_label {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.portfolio_transaction_container p {
+  display: inline;
 }
 
 
@@ -892,6 +957,16 @@ a:has(.navbar_list_element) {
   align-items: center;
   justify-content: space-evenly;
   overflow: hidden;
+}
+
+.sell_max_button {
+  border: none;
+  position: relative;
+  top: 30px;
+  right: 70px;
+  padding: 5px;
+  border-radius: 2px;
+  cursor: pointer;
 }
 
 .operate_again_button {
